@@ -3,16 +3,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public enum Role {
-    CUSTOMER,
-    OWNER,
-    EMPLOYEE
-}
 public abstract class User {
     public int id;
     public String username;
     public String password;
-    public Role role;
+    public Role role;  // Properly referencing the Role enum
+
+    // Enum Role inside the User class
+    public enum Role {
+        EMPLOYEE,
+        CUSTOMER,
+        OWNER
+    }
 
     public User(int id, String username, String password, Role role) {
         this.id = id;
@@ -23,9 +25,9 @@ public abstract class User {
 
     public static User getUserByUsernameAndPassword(String username, String password) {
         User user = null;
-        String query = "SELECT * FROM Users WHERE username = ? AND password = ?";
+        String query = "SELECT * FROM User WHERE username = ? AND password = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getCon();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, username);
@@ -33,20 +35,20 @@ public abstract class User {
 
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                int id = resultSet.getInt("id");
+                int id = resultSet.getInt("Id_User");
                 String roleString = resultSet.getString("role");
                 Role role = Role.valueOf(roleString);
                 boolean isMember = resultSet.getBoolean("is_member");
 
                 switch (role) {
                     case CUSTOMER:
-                        user = new Customer(id, username, password, isMember);
+                        user = new Customer(id, username, password, role, isMember);
                         break;
                     case OWNER:
-                        user = new Owner(id, username, password);
+                        user = new Owner(id, username, password, role);
                         break;
                     case EMPLOYEE:
-                        user = new Employee(id, username, password);
+                        user = new Employee(id, username, password, role);
                         break;
                 }
             }
@@ -56,6 +58,27 @@ public abstract class User {
 
         return user;
     }
+    public static void displayAllUsers() {
+        String query = "SELECT * FROM User";
 
+        try (Connection connection = DatabaseConnection.getCon();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("Id_User");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String roleString = resultSet.getString("role");
+                Role role = Role.valueOf(roleString);
+                boolean isMember = resultSet.getBoolean("is_member");
+
+                System.out.println("ID: " + id + ", Username: " + username + ", Role: " + role + ", Is Member: " + isMember);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public abstract void displayDashboard();
 }

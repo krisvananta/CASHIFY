@@ -3,21 +3,28 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/cashier";
-    private static final String USER = "root"; //
-    private static final String PASSWORD = ""; //
+    static Connection con;
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public static Connection getCon() {
+        try {
+            // Memuat driver JDBC untuk MySQL
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            // Membuat koneksi ke database MySQL
+            con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/cashier", "root", "");
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return con;
     }
 
     public static void main(String[] args) {
         try {
-            Connection connection = DatabaseConnection.getConnection();
+            // Memanggil metode getCon untuk mendapatkan koneksi ke database
+            Connection connection = DatabaseConnection.getCon();
             if (connection != null) {
                 System.out.println("Koneksi ke database berhasil!");
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
