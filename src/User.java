@@ -42,7 +42,7 @@ public abstract class User {
 
                 switch (role) {
                     case CUSTOMER:
-                        user = new Customer(id, username, password, isMember);
+                        user = new Customer(id, username, password, isMember); // parameter role dihapus
                         break;
                     case OWNER:
                         user = new Owner(id, username, password, role);
