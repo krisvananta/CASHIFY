@@ -1,7 +1,7 @@
 public class Customer extends User {
     private boolean isMember;
 
-    public Customer(int id, String username, String password,Role role ,boolean isMember) {
+    public Customer(int id, String username, String password, boolean isMember) {
         super(id, username, password, Role.CUSTOMER);
         this.isMember = isMember;
     }

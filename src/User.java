@@ -42,7 +42,7 @@ public abstract class User {
 
                 switch (role) {
                     case CUSTOMER:
-                        user = new Customer(id, username, password, role, isMember);
+                        user = new Customer(id, username, password, isMember);
                         break;
                     case OWNER:
                         user = new Owner(id, username, password, role);

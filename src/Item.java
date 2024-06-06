@@ -1,3 +1,8 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public abstract class Item {
     private int itemId;
     private String itemName;
@@ -6,6 +11,14 @@ public abstract class Item {
     public Item(int itemId, String itemName, double price){
         this.itemId = itemId;
         this.itemName = itemName;
+        this.price = price;
+    }
+
+    public void setItemName(String itemName){
+        this.itemName = itemName;
+    }
+
+    public void setPrice(double price){
         this.price = price;
     }
 
